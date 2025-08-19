@@ -14,10 +14,8 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        // Tambahkan log untuk memeriksa scheduler dipanggil
         Log::info('Scheduler Laravel dijalankan');
 
-        // Jalankan CheckAllCCTV tiap menit (testing)
         $schedule->command('cctv:check-all')->everyMinute();
     }
 

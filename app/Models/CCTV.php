@@ -11,7 +11,7 @@ class CCTV extends Model
 
     protected $fillable = [
         'title',
-        'ip_address',    // pastikan kolom di database juga 'ip_address'
+        'ip_address', 
         'stream_url',
         'status',
         'last_online',
