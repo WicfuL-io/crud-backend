@@ -2,26 +2,19 @@
 
 namespace App\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Jobs\CheckCCTVStatus;
+use App\Models\CCTV;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class Kernel extends ConsoleKernel
+class Kernel
 {
-    protected $commands = [
-        \App\Console\Commands\CheckAllCCTV::class,
-    ];
-
-    protected function schedule(Schedule $schedule): void
-    {
-        Log::info('Scheduler Laravel dijalankan');
-
-        $schedule->command('cctv:check-all')->everyMinute();
-    }
-
-    protected function commands(): void
-    {
-        $this->load(__DIR__ . '/Commands');
-        require base_path('routes/console.php');
+    public function __invoke(){
+        $cctvs = CCTV::all();
+        foreach ($cctvs as $cctv) {
+            Log::info("Dispatch job untuk CCTV ID: {$cctv->id_cctv}, IP: {$cctv->ip_address}");
+            CheckCCTVStatus::dispatch($cctv);
+        }
+        Log::info('CheckAllCCTV selesai dispatch semua CCTV');
     }
 }
